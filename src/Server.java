@@ -7,12 +7,12 @@ import java.net.Socket;
  * Created by jfabiano on 8/26/2016.
  */
 public class Server {
-
+    int portNumber = 8005;
     public void setConnection()
     {
         try {
             System.out.println("Server called");
-            ServerSocket serverListener = new ServerSocket(8005);
+            ServerSocket serverListener = new ServerSocket(portNumber);
             while(true) {
                 Socket clientSocket = serverListener.accept();
                 //create new connection handler just accepted, and create the connection handler object, then create the thread, and then

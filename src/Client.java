@@ -9,48 +9,36 @@ import java.util.Scanner;
  * Created by jfabiano on 8/26/2016.
  */
 public class Client {
+    int portNumber = 8005;
     public static void main(String[] args) {
         System.out.println("This is the client");
-
         try {
+            Thread clientServerThread = new Thread(new ClientServer());
+            clientServerThread.start();
+//
+//            ClientServer myServer = new ClientServer();
+//            myServer.setConnection();
 
             //Scanner for the console
             Scanner consoleInput = new Scanner(System.in);
-
             // connect to the server on the target port
             Socket clientSocket = new Socket("localhost", 8005);
             //Change this string to point to the appropriate ip address, or localhost for myself, 127.0.0.1 = me, 10.0.0.139 = Ben
-
             // once we connect to the server, we also have an input and output stream
             PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
             BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             //the input is the socket/inputstream, the input streamReader changes the stream into characters, and the Bufferedreader
             //turns the characters into lines to use the readline() function
-
             System.out.println("Please enter your name: ");
             String name = consoleInput.nextLine();
             String input = "";
-
             out.println("name=" + name);
-
             String serverResponse = in.readLine();
             System.out.println(serverResponse);
             if(serverResponse.equals("I have your name. Speak, human.")) {
 
                 while(true)
                 {
-                    //if (in.ready() == false) {
-//                    if (input.equals("history")) {
-//                        while(!in.ready()) {
-//                            if(in.ready())
-//                            {
-//                                System.out.println("History of messages you have sent:\n" + in.readLine());
-//                                break;
-//                            }
-//                        }
-//                        //System.out.println("History of messages you have sent:\n" + in.readLine());
-//                    }
-
                         System.out.println("Go ahead and type messages(type \"exit\" to exit or \"history\" to get all the messages you have sent).");
                         input = consoleInput.nextLine();
                         if (input.equals("exit")) {
@@ -63,14 +51,6 @@ public class Client {
                         }else {
                             out.println(input);
                         }
-                    //}else if (in.ready() == true)
-                    {
-                        //System.out.println("History of messages you have sent:\n" + in.readLine());
-                    }
-//                    if (in.ready() == true)
-//                    {
-//                        System.out.println("History:\n" + in.readLine());
-//                    }
                 }
                 //if the server/client is waiting for a input from the other the stream is blocked. always have a closed loop for the back and
                 //forth between the server and the client.
@@ -81,14 +61,22 @@ public class Client {
             }
             else
             {
+                ClientServer myServer = new ClientServer();
+                myServer.setConnection();
                 while(true)
                 {
+                    System.out.println("Go ahead and type messages(type \"exit\" to exit or \"history\" to get all the messages you have sent).");
                     input = consoleInput.nextLine();
-                    if (input.equals("exit"))
-                    {
+                    if (input.equals("exit")) {
                         break;
                     }
-                    out.println(input);
+                    if (input.equals("history")) {
+                        out.println(input);
+                        //in.skip();
+                        System.out.println("History of messages you have sent: " + in.readLine());
+                    }else {
+                        out.println(input);
+                    }
                 }
             }
             //use a .split on the input stream. connect the ip address/socket to the name sent?

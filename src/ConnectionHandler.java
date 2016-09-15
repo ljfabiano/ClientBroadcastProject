@@ -26,6 +26,7 @@ public class ConnectionHandler implements Runnable{
         try
 
         {
+            ServerClient myClient;
             String[] inputStringArray;//[1] = username
             ArrayList<String> aList = new ArrayList<String>();
             String name;
@@ -47,7 +48,16 @@ public class ConnectionHandler implements Runnable{
             inputStringArray = name.split("=");
             if(inputStringArray[0].equals("name"))
             {
+                //Socket clientSocket = serverListener.accept();
+                //create new connection handler just accepted, and create the connection handler object, then create the thread, and then
+                //pass it the thread
+                myClient = new ServerClient();
+//                ConnectionHandler myHandler = new ConnectionHandler(clientSocket);
+//                Thread handlingThread = new Thread(myClient);
+//                handlingThread.start();
+                //create serverClient
 
+                myClient.StartServerClient();
                 outputToClient.println("I have your name. Speak, human.");
                 while ((inputLine = inputFromClient.readLine()) != null) {
                     if (inputLine.equals("history")) {
@@ -56,18 +66,16 @@ public class ConnectionHandler implements Runnable{
                         System.out.println("Before sending the list I have: " + aList);
                         outputToClient.println(aList);//working on the 1st extra for the weekend assignment.
                         //Not working quite right. The array of strings is not showing the latest addition to it in the printout.
-
                     }
                     else {
                         System.out.println("Before adding the new piece I have: " + aList);
                         aList.add(inputLine);
                         System.out.println("After adding the new piece I have: " + aList);
                         System.out.println(inputStringArray[1] + " says: " + inputLine);
-
+                        //myClient.StartServerClient();
+                        myClient.sendMessage(inputLine);
                     }
-
                 }
-
             }
             else
             {
